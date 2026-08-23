@@ -1,0 +1,923 @@
+/* ========================================
+   GLOBAL
+======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+
+    background-color: #f5f7fb;
+
+    color: #1f2937;
+
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+}
+
+
+.app {
+    display: flex;
+
+    min-height: 100vh;
+}
+
+
+/* ========================================
+   SIDEBAR
+======================================== */
+
+.sidebar {
+    width: 240px;
+
+    background-color: #111827;
+
+    color: white;
+
+    padding: 25px 20px;
+
+    position: fixed;
+
+    left: 0;
+
+    top: 0;
+
+    bottom: 0;
+}
+
+
+.logo h2 {
+    font-size: 22px;
+
+    margin-bottom: 40px;
+}
+
+
+.logo span {
+    color: #6366f1;
+}
+
+
+.sidebar nav {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+
+.sidebar nav a {
+    text-decoration: none;
+
+    color: #9ca3af;
+
+    padding: 12px 15px;
+
+    border-radius: 8px;
+
+    transition: 0.3s;
+}
+
+
+.sidebar nav a:hover {
+    background-color: #1f2937;
+
+    color: white;
+}
+
+
+.sidebar nav a.active {
+    background-color: #6366f1;
+
+    color: white;
+}
+
+
+/* ========================================
+   MAIN CONTENT
+======================================== */
+
+.main-content {
+    margin-left: 240px;
+
+    width: calc(100% - 240px);
+
+    padding: 30px;
+}
+
+
+/* ========================================
+   HEADER
+======================================== */
+
+.header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 30px;
+}
+
+
+.header h1 {
+    font-size: 30px;
+
+    margin-bottom: 6px;
+}
+
+
+.header p {
+    color: #6b7280;
+}
+
+
+#themeToggle {
+    border: none;
+
+    background-color: white;
+
+    width: 42px;
+
+    height: 42px;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.08);
+
+    transition: 0.3s;
+}
+
+
+/* ========================================
+   SUMMARY CARDS
+======================================== */
+
+.summary-cards {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 20px;
+
+    margin-bottom: 30px;
+}
+
+
+.card {
+    background-color: white;
+
+    padding: 24px;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.06);
+
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+}
+
+
+.card p {
+    color: #6b7280;
+
+    font-size: 14px;
+
+    margin-bottom: 10px;
+}
+
+
+.card h2 {
+    font-size: 26px;
+}
+
+
+/* ========================================
+   SECTIONS
+======================================== */
+
+.transaction-section,
+.transactions-section {
+    background-color: white;
+
+    padding: 25px;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.06);
+
+    margin-bottom: 25px;
+}
+
+
+.section-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+
+.section-header h2 {
+    font-size: 20px;
+}
+
+
+/* ========================================
+   FORM
+======================================== */
+
+#transactionForm {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 18px;
+}
+
+
+.form-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+.form-group label {
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #374151;
+}
+
+
+.form-group input,
+.form-group select {
+    padding: 11px 12px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    outline: none;
+
+    background-color: white;
+
+    color: #1f2937;
+}
+
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #6366f1;
+
+    box-shadow:
+        0 0 0 2px
+        rgba(99, 102, 241, 0.1);
+}
+
+
+/* ========================================
+   ADD BUTTON
+======================================== */
+
+.add-btn {
+    align-self: end;
+
+    height: 42px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background-color: #6366f1;
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+
+.add-btn:hover {
+    background-color: #4f46e5;
+}
+
+
+/* ========================================
+   SEARCH
+======================================== */
+
+#searchInput {
+    width: 230px;
+
+    padding: 10px 12px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    background-color: white;
+
+    color: #1f2937;
+}
+
+
+#searchInput:focus {
+    border-color: #6366f1;
+}
+
+
+/* ========================================
+   FILTERS
+======================================== */
+
+.transaction-filters {
+    display: flex;
+
+    gap: 12px;
+
+    margin-bottom: 20px;
+
+    flex-wrap: wrap;
+}
+
+
+.transaction-filters select {
+    padding: 10px 12px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 8px;
+
+    background-color: white;
+
+    color: #374151;
+
+    font-size: 14px;
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+
+.transaction-filters select:focus {
+    border-color: #6366f1;
+}
+
+
+/* ========================================
+   TRANSACTIONS
+======================================== */
+
+.transaction-item {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 18px 5px;
+
+    border-bottom:
+        1px solid #e5e7eb;
+}
+
+
+.transaction-item:last-child {
+    border-bottom: none;
+}
+
+
+.transaction-info strong {
+    font-size: 15px;
+
+    color: #1f2937;
+}
+
+
+.transaction-info p {
+    margin-top: 5px;
+
+    color: #9ca3af;
+
+    font-size: 13px;
+}
+
+
+.transaction-right {
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+}
+
+
+.income-amount {
+    color: #16a34a;
+}
+
+
+.expense-amount {
+    color: #dc2626;
+}
+
+
+.delete-btn {
+    border: none;
+
+    background-color: #fee2e2;
+
+    color: #dc2626;
+
+    padding: 7px 12px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    transition: 0.2s;
+}
+
+
+.delete-btn:hover {
+    background-color: #fecaca;
+}
+
+
+.empty-message {
+    text-align: center;
+
+    padding: 35px;
+
+    color: #9ca3af;
+}
+
+
+/* ========================================
+   ANALYTICS
+======================================== */
+
+.analytics-section {
+    background-color: white;
+
+    padding: 25px;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.06);
+
+    margin-bottom: 25px;
+}
+
+
+.analytics-header {
+    margin-bottom: 22px;
+}
+
+
+.analytics-header h2 {
+    font-size: 20px;
+
+    margin-bottom: 5px;
+}
+
+
+.analytics-header p {
+    color: #6b7280;
+
+    font-size: 14px;
+}
+
+
+.analytics-stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 25px;
+}
+
+
+.stat-card {
+    background-color: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 10px;
+
+    padding: 18px;
+}
+
+
+.stat-card span {
+    display: block;
+
+    color: #6b7280;
+
+    font-size: 13px;
+
+    margin-bottom: 8px;
+}
+
+
+.stat-card strong {
+    font-size: 20px;
+
+    color: #111827;
+}
+
+
+/* ========================================
+   CHARTS
+======================================== */
+
+.charts-container {
+    display: grid;
+
+    grid-template-columns:
+        1.4fr 1fr;
+
+    gap: 20px;
+}
+
+
+.chart-card {
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    padding: 20px;
+
+    background-color: white;
+}
+
+
+.chart-title {
+    margin-bottom: 15px;
+}
+
+
+.chart-title h3 {
+    font-size: 16px;
+
+    margin-bottom: 5px;
+}
+
+
+.chart-title p {
+    color: #9ca3af;
+
+    font-size: 13px;
+}
+
+
+.chart-wrapper {
+    position: relative;
+
+    height: 280px;
+}
+
+
+/* ========================================
+   TOAST NOTIFICATION
+======================================== */
+
+.toast {
+    position: fixed;
+
+    right: 30px;
+
+    bottom: 30px;
+
+    z-index: 99999;
+
+    min-width: 260px;
+
+    max-width: 360px;
+
+    padding: 14px 20px;
+
+    border-radius: 10px;
+
+    background-color: #111827;
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.20);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform: translateY(20px);
+
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease,
+        visibility 0.3s ease;
+
+    pointer-events: none;
+}
+
+
+.toast.show {
+    opacity: 1;
+
+    visibility: visible;
+
+    transform: translateY(0);
+}
+
+
+.toast.success {
+    background-color: #16a34a;
+}
+
+
+.toast.error {
+    background-color: #dc2626;
+}
+
+
+/* ========================================
+   DARK MODE
+======================================== */
+
+body.dark-mode {
+    background-color: #0f172a;
+
+    color: #e5e7eb;
+}
+
+
+body.dark-mode .main-content {
+    background-color: #0f172a;
+}
+
+
+body.dark-mode .header p {
+    color: #94a3b8;
+}
+
+
+body.dark-mode #themeToggle {
+    background-color: #1e293b;
+
+    color: white;
+}
+
+
+body.dark-mode .card,
+body.dark-mode .transaction-section,
+body.dark-mode .transactions-section,
+body.dark-mode .analytics-section,
+body.dark-mode .chart-card {
+    background-color: #1e293b;
+
+    color: #e5e7eb;
+}
+
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3 {
+    color: #f8fafc;
+}
+
+
+body.dark-mode .form-group label {
+    color: #e2e8f0;
+}
+
+
+body.dark-mode .form-group input,
+body.dark-mode .form-group select,
+body.dark-mode #searchInput,
+body.dark-mode .transaction-filters select {
+    background-color: #0f172a;
+
+    color: #e5e7eb;
+
+    border-color: #475569;
+}
+
+
+body.dark-mode input::placeholder {
+    color: #64748b;
+}
+
+
+body.dark-mode .stat-card {
+    background-color: #0f172a;
+
+    border-color: #334155;
+}
+
+
+body.dark-mode .stat-card span {
+    color: #94a3b8;
+}
+
+
+body.dark-mode .stat-card strong {
+    color: #f8fafc;
+}
+
+
+body.dark-mode .chart-title p {
+    color: #94a3b8;
+}
+
+
+body.dark-mode .transaction-item {
+    border-color: #334155;
+}
+
+
+body.dark-mode .transaction-info strong {
+    color: #f8fafc;
+}
+
+
+body.dark-mode .transaction-info p {
+    color: #94a3b8;
+}
+
+
+body.dark-mode .empty-message {
+    color: #64748b;
+}
+
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 900px) {
+
+    .sidebar {
+        width: 200px;
+    }
+
+
+    .main-content {
+        margin-left: 200px;
+
+        width:
+            calc(100% - 200px);
+    }
+
+
+    .summary-cards {
+        grid-template-columns: 1fr;
+    }
+
+
+    #transactionForm {
+        grid-template-columns: 1fr;
+    }
+
+
+    .analytics-stats {
+        grid-template-columns: 1fr;
+    }
+
+
+    .charts-container {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .sidebar {
+        display: none;
+    }
+
+
+    .main-content {
+        margin-left: 0;
+
+        width: 100%;
+
+        padding: 20px;
+    }
+
+
+    .header h1 {
+        font-size: 24px;
+    }
+
+
+    .section-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+
+    #searchInput {
+        width: 100%;
+    }
+
+
+    .transaction-filters {
+        flex-direction: column;
+    }
+
+
+    .transaction-filters select {
+        width: 100%;
+    }
+
+
+    .transaction-item {
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+
+    .transaction-right {
+        flex-direction: column;
+
+        align-items: flex-end;
+
+        gap: 8px;
+    }
+
+
+    .chart-wrapper {
+        height: 240px;
+    }
+
+
+    .toast {
+        left: 20px;
+
+        right: 20px;
+
+        bottom: 20px;
+
+        min-width: auto;
+
+        max-width: none;
+
+        text-align: center;
+    }
+
+}
