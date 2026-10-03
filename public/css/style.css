@@ -1369,8 +1369,8 @@ tbody tr:hover td {
         box-shadow: 20px 0 60px rgba(0, 0, 0, 0.35);
     }
 
-    .sidebar .logo {
-        margin-left: 60px;
+    .sidebar {
+        padding-top: 76px;
     }
 
     .mobile-menu {

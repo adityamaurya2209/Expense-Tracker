@@ -647,7 +647,7 @@ function showPage(page) {
     }
 
     if (page === "planning") {
-        updatePlanning();
+        updatePlanningCards();
     }
 
     if (page === "categories") {
