@@ -1,5 +1,5 @@
 /* =====================================================
-   STUDENT EXPENSE TRACKER
+   EXPENSE TRACKER
    FINAL MEGA PASS
 ===================================================== */
 
@@ -33,23 +33,17 @@ const $ = id =>
    DATA
 ===================================================== */
 
-let transactions = loadJSON(
-    "transactions",
-    []
-);
+// Loaded from the server in initialize().
 
-let customCategories = loadJSON(
-    "customCategories",
-    []
-);
+let transactions = [];
 
-let monthlyBudget = Number(
-    localStorage.getItem("monthlyBudget") || 0
-);
+let customCategories = [];
 
-let savingsGoal = Number(
-    localStorage.getItem("savingsGoal") || 0
-);
+let monthlyBudget = 0;
+
+let savingsGoal = 0;
+
+let currentUser = null;
 
 
 /* =====================================================
@@ -82,8 +76,96 @@ let filters = {
 
 
 /* =====================================================
-   LOCAL STORAGE
+   SERVER STORAGE
 ===================================================== */
+
+const LEGACY_KEYS = [
+    "transactions",
+    "customCategories",
+    "monthlyBudget",
+    "savingsGoal"
+];
+
+
+// Last state known to be saved on the server: id -> JSON string.
+let syncedTransactions = new Map();
+
+// Serialises writes so they reach the server in order.
+let saveQueue = Promise.resolve();
+
+let pendingSaves = 0;
+
+
+async function api(path, options = {}) {
+
+    const response = await fetch(path, {
+        ...options,
+        headers: {
+            "Content-Type": "application/json",
+            ...(options.headers || {})
+        }
+    });
+
+
+    if (response.status === 401) {
+
+        location.href = "/login";
+
+        throw new Error("Session expired.");
+
+    }
+
+
+    const result =
+        await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+        throw new Error(
+            result.error || `Request failed (${response.status})`
+        );
+    }
+
+    return result;
+
+}
+
+
+function enqueueSave(task, onError) {
+
+    pendingSaves++;
+
+    saveQueue = saveQueue
+        .then(task)
+        .catch(error => {
+
+            console.error("Save error:", error);
+
+            onError?.();
+
+            showToast(
+                "Could not save to the server. Please check your connection.",
+                "error"
+            );
+
+        })
+        .finally(() => {
+            pendingSaves--;
+        });
+
+}
+
+
+function snapshotTransactions() {
+
+    syncedTransactions = new Map(
+        transactions.map(transaction => [
+            transaction.id,
+            JSON.stringify(transaction)
+        ])
+    );
+
+}
+
 
 function loadJSON(key, fallback) {
 
@@ -110,9 +192,92 @@ function loadJSON(key, fallback) {
 
 function saveTransactions() {
 
-    localStorage.setItem(
-        "transactions",
-        JSON.stringify(transactions)
+    const current = new Map(
+        transactions.map(transaction => [
+            transaction.id,
+            JSON.stringify(transaction)
+        ])
+    );
+
+    const upsert = [];
+
+    const remove = [];
+
+    const previous = new Map();
+
+
+    current.forEach((json, id) => {
+
+        if (syncedTransactions.get(id) !== json) {
+
+            upsert.push(JSON.parse(json));
+
+            previous.set(id, syncedTransactions.get(id));
+
+        }
+
+    });
+
+    syncedTransactions.forEach((json, id) => {
+
+        if (!current.has(id)) {
+
+            remove.push(id);
+
+            previous.set(id, json);
+
+        }
+
+    });
+
+
+    if (!upsert.length && !remove.length) {
+        return;
+    }
+
+
+    syncedTransactions = current;
+
+
+    enqueueSave(
+        () => api("/api/transactions/sync", {
+            method: "POST",
+            body: JSON.stringify({ upsert, remove })
+        }),
+        () => {
+
+            // Roll the snapshot back so the next save retries these changes.
+            previous.forEach((json, id) => {
+
+                if (json === undefined) {
+                    syncedTransactions.delete(id);
+                }
+
+                else {
+                    syncedTransactions.set(id, json);
+                }
+
+            });
+
+        }
+    );
+
+}
+
+
+function saveSettings() {
+
+    const body = JSON.stringify({
+        monthlyBudget,
+        savingsGoal,
+        customCategories
+    });
+
+    enqueueSave(
+        () => api("/api/settings", {
+            method: "PUT",
+            body
+        })
     );
 
 }
@@ -120,27 +285,130 @@ function saveTransactions() {
 
 function savePlanning() {
 
-    localStorage.setItem(
-        "monthlyBudget",
-        String(monthlyBudget)
-    );
-
-    localStorage.setItem(
-        "savingsGoal",
-        String(savingsGoal)
-    );
+    saveSettings();
 
 }
 
 
 function saveCategories() {
 
-    localStorage.setItem(
-        "customCategories",
-        JSON.stringify(customCategories)
-    );
+    saveSettings();
 
 }
+
+
+async function loadUserData() {
+
+    const data =
+        await api("/api/data");
+
+    currentUser = data.user;
+
+    transactions = data.transactions;
+
+    customCategories = data.customCategories;
+
+    monthlyBudget = data.monthlyBudget;
+
+    savingsGoal = data.savingsGoal;
+
+    snapshotTransactions();
+
+}
+
+
+function offerLegacyImport() {
+
+    const legacyTransactions =
+        loadJSON("transactions", []);
+
+    if (
+        transactions.length > 0 ||
+        !Array.isArray(legacyTransactions) ||
+        legacyTransactions.length === 0
+    ) {
+        return;
+    }
+
+
+    const confirmed =
+        confirm(
+            `Found ${legacyTransactions.length} transaction(s) saved in this browser from an earlier version. Import them into your account?`
+        );
+
+
+    if (confirmed) {
+
+        transactions = legacyTransactions;
+
+        customCategories =
+            loadJSON("customCategories", []);
+
+        monthlyBudget = Number(
+            localStorage.getItem("monthlyBudget") || 0
+        );
+
+        savingsGoal = Number(
+            localStorage.getItem("savingsGoal") || 0
+        );
+
+        saveTransactions();
+
+        saveSettings();
+
+    }
+
+
+    // Either way, don't offer again (or to another account on this browser).
+    try {
+
+        LEGACY_KEYS.forEach(key =>
+            localStorage.removeItem(key)
+        );
+
+    } catch (error) {
+
+        console.error("Storage error:", error);
+
+    }
+
+
+    if (confirmed) {
+
+        saveQueue.then(() =>
+            showToast(
+                `✓ Imported ${transactions.length} transaction(s) into your account!`
+            )
+        );
+
+    }
+
+}
+
+
+async function logout() {
+
+    await saveQueue;
+
+    await fetch("/api/auth/logout", {
+        method: "POST"
+    }).catch(() => {});
+
+    location.href = "/login";
+
+}
+
+
+window.addEventListener(
+    "beforeunload",
+    event => {
+
+        if (pendingSaves > 0) {
+            event.preventDefault();
+        }
+
+    }
+);
 
 
 /* =====================================================
@@ -2170,7 +2438,7 @@ $("exportCsvButton")
 
             downloadCSV(
                 transactions,
-                "student-expense-tracker.csv"
+                "expense-tracker.csv"
             );
 
 
@@ -3966,7 +4234,7 @@ $("backupButton")
                 url;
 
             link.download =
-                "student-expense-tracker-backup.json";
+                "expense-tracker-backup.json";
 
             link.click();
 
@@ -4163,7 +4431,7 @@ $("clearDataButton")
 
             const confirmed =
                 confirm(
-                    "This will permanently delete ALL transactions from this browser. Continue?"
+                    "This will permanently delete ALL transactions from your account. Continue?"
                 );
 
 
@@ -4213,13 +4481,47 @@ function refreshApplication() {
    INITIALIZATION
 ===================================================== */
 
-function initialize() {
+async function initialize() {
 
     applyTheme();
 
 
     $("date").value =
         getToday();
+
+
+    try {
+
+        await loadUserData();
+
+    } catch (error) {
+
+        console.error("Load error:", error);
+
+        showToast(
+            "Could not load your data from the server. Please refresh.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    $("userName").textContent =
+        currentUser.name;
+
+    $("userEmail").textContent =
+        currentUser.email;
+
+    $("logoutButton")
+        .addEventListener(
+            "click",
+            logout
+        );
+
+
+    offerLegacyImport();
 
 
     populateCategorySelects();

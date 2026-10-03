@@ -119,6 +119,71 @@ select {
     color: white;
 }
 
+.user-box {
+    position: absolute;
+
+    left: 20px;
+    right: 20px;
+    bottom: 24px;
+
+    border-top: 1px solid #1c2639;
+
+    padding-top: 18px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+.user-info {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+
+    min-width: 0;
+}
+
+.user-info strong,
+.user-info span {
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.user-info span {
+    color: #b9c3d8;
+
+    font-size: 13px;
+}
+
+.logout-button {
+    border: 1px solid #2b3650;
+
+    background: transparent;
+
+    color: #b9c3d8;
+
+    padding: 10px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.logout-button:hover {
+    background: #1c2639;
+
+    color: white;
+}
+
 
 /* =====================================================
    MAIN

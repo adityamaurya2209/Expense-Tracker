@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Expense Tracker — Sign in</title>
+
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+
+<body>
+
+    <main class="auth-shell">
+
+        <section class="auth-brand">
+
+            <div class="logo">
+                Expense<span>Tracker</span>
+            </div>
+
+            <h1>
+                Take control of your money.
+            </h1>
+
+            <p>
+                Track income and expenses, set budgets and savings goals,
+                and see where your money goes — from any device.
+            </p>
+
+        </section>
+
+
+        <section class="auth-card">
+
+            <div class="auth-tabs" role="tablist">
+
+                <button id="loginTab"
+                        class="auth-tab active"
+                        role="tab"
+                        data-mode="login">
+                    Log in
+                </button>
+
+                <button id="signupTab"
+                        class="auth-tab"
+                        role="tab"
+                        data-mode="signup">
+                    Sign up
+                </button>
+
+            </div>
+
+
+            <form id="authForm" novalidate>
+
+                <h2 id="authTitle">
+                    Welcome back
+                </h2>
+
+                <p id="authSubtitle" class="muted">
+                    Log in to your account to continue.
+                </p>
+
+
+                <label id="nameField" class="field hidden">
+                    <span>Full name</span>
+                    <input id="name"
+                           type="text"
+                           autocomplete="name"
+                           maxlength="100"
+                           placeholder="Your name">
+                </label>
+
+                <label class="field">
+                    <span>Email</span>
+                    <input id="email"
+                           type="email"
+                           autocomplete="email"
+                           maxlength="255"
+                           placeholder="you@example.com"
+                           required>
+                </label>
+
+                <label class="field">
+                    <span>Password</span>
+                    <input id="password"
+                           type="password"
+                           autocomplete="current-password"
+                           maxlength="72"
+                           placeholder="At least 8 characters"
+                           required>
+                </label>
+
+                <label id="confirmField" class="field hidden">
+                    <span>Confirm password</span>
+                    <input id="confirmPassword"
+                           type="password"
+                           autocomplete="new-password"
+                           maxlength="72"
+                           placeholder="Re-enter password">
+                </label>
+
+
+                <p id="authError" class="auth-error" role="alert"></p>
+
+
+                <button id="authSubmit"
+                        type="submit"
+                        class="primary-button">
+                    Log in
+                </button>
+
+            </form>
+
+        </section>
+
+    </main>
+
+
+    <script src="js/auth.js"></script>
+
+</body>
+
+</html>
