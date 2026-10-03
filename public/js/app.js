@@ -2947,7 +2947,7 @@ function createIncomeExpenseChart() {
                             label: "Income",
                             data: income,
                             backgroundColor:
-                                "#60a5fa"
+                                "#22c55e"
                         },
 
                         {
@@ -3453,10 +3453,10 @@ function createReportCharts() {
                                 ),
 
                             borderColor:
-                                "#3b82f6",
+                                "#22c55e",
 
                             backgroundColor:
-                                "rgba(59,130,246,.1)",
+                                "rgba(34,197,94,.1)",
 
                             tension:
                                 0.3
@@ -4097,6 +4097,28 @@ $("settingsSavingsButton")
    THEME
 ===================================================== */
 
+function syncChartTheme(dark) {
+
+    if (typeof Chart === "undefined") {
+        return;
+    }
+
+    Chart.defaults.font.family =
+        getComputedStyle(document.body).fontFamily;
+
+    Chart.defaults.color =
+        dark
+            ? "#8f9cb5"
+            : "#6b7891";
+
+    Chart.defaults.borderColor =
+        dark
+            ? "rgba(143, 156, 181, 0.15)"
+            : "rgba(15, 27, 51, 0.08)";
+
+}
+
+
 function applyTheme() {
 
     const dark =
@@ -4109,6 +4131,9 @@ function applyTheme() {
         "dark-mode",
         dark
     );
+
+
+    syncChartTheme(dark);
 
 
     $("themeToggle")
@@ -4151,6 +4176,12 @@ function toggleTheme() {
             : "Light mode enabled",
         "info"
     );
+
+
+    // Charts are rebuilt on refresh, picking up the new colours.
+    syncChartTheme(dark);
+
+    refreshApplication();
 
 }
 
